@@ -97,4 +97,6 @@ scrape_configs:
 
 ```
 
-Some servers exposes prometheus metrics by themselves, but some don't. For the Applications that don't exposes metrics, `Exporters` can be used. **Exporters** are lightweight binaries that fetch metrics from a system and expose them in the Prometheus format. Prometheus Exporter list can be found [here](https://prometheus.io/docs/instrumenting/exporters/).
+Some servers exposes prometheus metrics by themselves, but some don't. For the Applications that don't exposes metrics, `Exporters` can be used. **Exporters** are lightweight binaries that fetch metrics from a system and expose them in the Prometheus format. Prometheus Exporter list can be found [here](https://prometheus.io/docs/instrumenting/exporters/). 
+
+What if you want to monitor your own applications such as how many request? how many exceptions? or how many server resources are used? prometheus have a [**Client Libary**](https://prometheus.io/docs/instrumenting/clientlibs/) for diffrent languages like Go, java, Python and so on.
