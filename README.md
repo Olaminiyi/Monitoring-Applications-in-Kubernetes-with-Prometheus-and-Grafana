@@ -208,3 +208,102 @@ pod/prometheus-kube-state-metrics-95bc57444-rx55q            1/1     Running   0
 pod/prometheus-prometheus-kube-prometheus-prometheus-0       2/2     Running   0          3m43s
 pod/prometheus-prometheus-node-exporter-clwrw                1/1     Running   0          4m8s
 ```
+check the statefulset created and get the information in it
+````
+kubectl get statefulset
+````
+
+download the content in a yaml file
+```
+kubectl describe statefulset prometheus-prometheus-kube-prometheus-prometheus > prom.yaml
+```
+```
+kubectl describe statefulset alertmanager-prometheus-kube-prometheus-alertmanager  > alert.yaml
+```
+check throught the prom.yaml. let's get check under the container where the pods are running
+
+We can see the `image` is built on, the `port` is running on and under the `mount` where it gets its configuration data.
+
+configuration file is the place where prometheus define what endpoints to scrape, 
+
+It has all addresses of application where it gets expose/metrics
+
+> [!NOTE]
+> You may not need to know how all the files and the configuration works, but know **how to add/adjust alert rules** and **how to adjust Prometheus configuration**
+
+### Access Grafana
+
+```
+kubectl get service
+```
+ All the services are clusterIp type which is the internal service. They are not open to external service request, they are all close. In production what we do is to configure ingress and point the ingress rules to prometheus grafana. But in this instance we are going to access grafana using port forward. 
+
+ So, we are going to need deployment for that.
+ ```
+ kubectl get deployment
+ ```
+ ```
+ kubectl get pod
+ ```
+
+ So we are going to check the port grafana is running
+ ```
+ kubectl logs prometheus-grafana-648c7ff88d-t9pq4 
+ ```
+ From the logs, the grafana is running on port 3000
+
+ ```
+ kubectl port-forward deployment/prometheus-grafana 3000
+ ```
+
+ The default login: User = admin, password = prom-operator 
+
+ Under the manage we can see all the metrics that the prometheus is scrapping already through `Node Exporter`. We only one node which is minikube being manage currently, we can find it under Dashbord
+
+ We can see the IP address of the minikube on the dashboard
+
+ In addition to grafana, Prometheus also have its own UI, and we can access it also using port forward. From the prom.yaml files we downloaded earlier, we can see that prometheus is running on port `9090`
+
+```
+kubectl get pod
+```
+
+```
+kubectl port-forward prometheus-prometheus-kube-prometheus-prometheus-0 9090
+```
+
+### Monitor mongoDB with prometheus 
+
+We are going to deploy MongoDB App on the kubernetes cluster, and expose the data or metrics of the MongoDB application using MongoDB Exporter. Once the metrics are expose we are going to allow prometheus to scrape the metrics. We are going to do that using another component called **Service Monitor** 
+
+```
+kubectl get servicemonitor
+```
+
+These are the services that generated all the targets on the prometheus UI 
+
+Let take one of the servicemonitor and check what it contain
+```
+kubectl get servicemonitor prometheus-kube-prometheus-alertmanager  -oyaml
+```
+
+You don't have to understand all that is written in the service monitor but there are some important label you must understand.
+
+The `release` label, it allows prometheus to find service in the cluster and register them so that it can start scrapig the application or endpoint of the application that service monitor is pointing to.
+
+
+
+This logic of how prometheus actually discovers service monitors using this attribute is configured in prometheus itself. 
+
+To check the configuration we have to check the crd
+```
+kubectl get crd
+```
+These are the crds that prometheus has created, they are basically custom component for prometheus. Let's check one of them
+```
+kubectl get  prometheuses.monitoring.coreos.com  -oyaml
+```
+
+If we scroll down to the serviceMonitorSelector section, it basically says match all the service monitor that has **label** `release:prometheus`. Which means if you created a serviceMonitorComponent which doesn't have this label it will not be dicovered by prometheus.
+
+so let's deploy MongoDB and configure it so that it becomes one of the target for prometheus to collect its metrics
