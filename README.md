@@ -306,4 +306,123 @@ kubectl get  prometheuses.monitoring.coreos.com  -oyaml
 
 If we scroll down to the serviceMonitorSelector section, it basically says match all the service monitor that has **label** `release:prometheus`. Which means if you created a serviceMonitorComponent which doesn't have this label it will not be dicovered by prometheus.
 
-so let's deploy MongoDB and configure it so that it becomes one of the target for prometheus to collect its metrics
+so let's deploy MongoDB and configure it so that it becomes one of the target for prometheus to collect its metrics.
+
+We have have a mongodb.yaml file in this folder, it contains depoyment and service we are going to use for this deployment.
+
+```
+kubectl apply -f mongodb.yaml
+```
+```
+kubectl get pod
+```
+
+Now we have mongodb pod running and we monitor it with prometheus, the way to do that is by using a component called **Exporter**
+
+check for exporter [here](https://prometheus.io/docs/instrumenting/exporters/). Search for mongoDB, and if you click on it will take us to the github repository for mongodb_exporter. The exporter are also available as contaier and we can search for them on [docker hub](https://hub.docker.com/explore).
+
+There are 3 components we need to have when deploying an exporter
+- Exporter application in docker image: This will exposes/metric endpoint
+- A Service: for connecting to the exporter
+- ServiceMonitor: That will tell prometheus that their a new endpoint to be scrapped
+
+We can do this by writing a yaml file for the component configuration files, but the better way to do it is to get a helm chart that has everything in it and install it with one command. So, let's check for the helm chart. The search will take us to github repo of the [**Community**](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-mongodb-exporter) maintaining the helm chart.
+
+
+**helm show values  prometheus-community/kube-prometheus-stack > values.yaml**
+
+
+add the repo 
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+```
+
+we need to check which of the default configuration values we can override before installing the chart.
+```
+helm show values  prometheus-community/prometheus-mongodb-exporter > values.yaml
+```
+
+from the values.yaml we downloaded, we need to override the mongodb uri and additionallabels under the serviceMonitor. We need to add the release label to it to enable prometheus to scrap its metrics.
+
+let's check for the service and see if the `mongodb service uri` configured in the value.yaml file we downloaded is correct with our service's port. 
+
+We are going to delete all the other elements in the values file we don't need to override leaving the serviceMonitor. Save the file.
+
+Install the mongodb-exporter chart and pass the parameters with the configure values.yaml
+
+```
+helm install mongodb-exporter prometheus-community/prometheus-mongodb-exporter -f values.yaml
+```
+let's check what we have installed with helm  now
+
+```
+helm ls
+```
+check the pod
+```
+kubectl get pod
+```
+check the Service
+```
+kubectl get svc
+```
+check serviceMonitor
+```
+kubectl get servicemonitor
+```
+
+> [!NOTE]
+> the mongodb-exporter service monitor was not created. After troubleshooting, I notice i include **enabled: true** in the override configuration in the value.yaml file. The service was created after it was included.
+
+
+Forwards the mongodb-exporter to the service port
+
+image 
+
+```
+kubectl port-forward service/mongodb-exporter-prometheus-mongodb-exporter 9216
+```
+
+let check the port in our web browser to see what data it's collecting
+```
+http://127.0.0.1:9216/
+```
+click on the metrics to check the data
+
+image
+
+we can see it is collecting metrics from mongodb
+
+image
+
+let check our prometheus, it must have discovered the mongodb-exporter through the serviceMonitor and scrap the mongodb metrics
+```
+127.0.0.1:9090 -> 9090
+```
+
+Lets check grafana to see if is displaying the metrics from mongodb
+```
+kubectl get deployment
+```
+forward the deployment to port 30
+
+kubectl port-forward deployment/prometheus-grafana 3000
+
+**Login with: username = admin, password = prom-operator**
+
+click on Dashboard > pod
+
+
+helm show values prometheus-community/kube-prometheus-stack > newvalues.yaml
+
+http://localhost:9090
+
+
+
+
+kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+kubectl --namespace default port-forward $POD_NAME 3000
+
+W6OYuQ4o3Y7o1ZZZ2ljjqFzRmZWWFpy709W53lEb
