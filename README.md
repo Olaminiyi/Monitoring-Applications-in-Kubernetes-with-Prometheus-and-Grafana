@@ -115,7 +115,7 @@ There are several ways to deploy prometheus in kubernetes cluster: some are list
  - Helm will initiate the setup 
  - Operator will manage the setup
 
-We will use Minikube to set up our cluster and Kubectl to interract with our cluster
+We will use Minikube to set up our cluster and Kubectl to interract with our cluster.
 
 Minikube is a tool that sets up a Kubernetes environment on a local PC or laptop. It’s technically a Kubernetes distribution, but because it addresses a different type of use case than most other distributions (like Rancher, OpenShift, and EKS), it’s more common to hear folks refer to it as a tool rather than a distribution. Read more about [Minikube here](https://sysdig.com/learn-cloud-native/what-is-minikube/).
 
