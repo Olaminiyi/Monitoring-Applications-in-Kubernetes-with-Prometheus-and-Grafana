@@ -34,7 +34,7 @@ How does Prometheus collect those metrics from target?
 
 Prometheus collects metrics from target systems by scraping HTTP endpoints that expose these metrics in a specific format. Some of the methods are explain below:
 
-1. **Target Configuration:** This can be achieve in 2 ways for different environments.
+1. **Target Configuration:** This can be achieve in 2 ways for different environments
 - **Static Configuration:** You can configure Prometheus with a list of targets in its configuration file. This is useful for small or static environments where the list of targets doesn't change frequently.
 ```
 scrape_configs:
