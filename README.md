@@ -133,6 +133,7 @@ check to ensure if there's any resources on the cluster
 ```
 kubectl get pod
 ```
+![alt text](images/1.3.png)
 
 You can get helm chat to install prometheus operator [here](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 
@@ -141,13 +142,19 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 helm repo update
 ```
+![alt text](images/1.4.png)
+
 ```
 helm install prometheus prometheus-community/kube-prometheus-stack
 
 ```
+![alt text](images/1.5.png)
+
 ```
 kubectl get pod
 ```
+![alt text](images/1.6.png)
+
 To check every part that was created 
 ```
 kubectl get all
@@ -209,10 +216,14 @@ pod/prometheus-kube-state-metrics-95bc57444-rx55q            1/1     Running   0
 pod/prometheus-prometheus-kube-prometheus-prometheus-0       2/2     Running   0          3m43s
 pod/prometheus-prometheus-node-exporter-clwrw                1/1     Running   0          4m8s
 ```
+
+![alt text](images/1.7.png)
+
 check the statefulset created and get the information in it
 ````
 kubectl get statefulset
 ````
+![alt text](images/1.8.png)
 
 download the content in a yaml file
 ```
@@ -229,6 +240,10 @@ configuration file is the place where prometheus define what endpoints to scrape
 
 It has all addresses of application where it gets expose/metrics
 
+![alt text](images/1.9.png)
+
+![alt text](images/1.10.png)
+
 > [!NOTE]
 > You may not need to know how all the files and the configuration works, but know **how to add/adjust alert rules** and **how to adjust Prometheus configuration**
 
@@ -237,15 +252,20 @@ It has all addresses of application where it gets expose/metrics
 ```
 kubectl get service
 ```
+![alt text](images/1.11.png)
+
  All the services are clusterIp type which is the internal service. They are not open to external service request, they are all close. In production what we do is to configure ingress and point the ingress rules to prometheus grafana. But in this instance we are going to access grafana using port forward. 
 
  So, we are going to need deployment for that.
  ```
  kubectl get deployment
  ```
+ ![alt text](images/1.12.png)
+
  ```
  kubectl get pod
  ```
+![alt text](images/1.13.png)
 
  So we are going to check the port grafana is running
  ```
@@ -253,25 +273,48 @@ kubectl get service
  ```
  From the logs, the grafana is running on port 3000
 
+ ![alt text](images/1.14.png)
+
  ```
  kubectl port-forward deployment/prometheus-grafana 3000
  ```
+![alt text](images/1.15.png)
 
  The default login: User = admin, password = prom-operator 
+
+ ![alt text](images/1.16.png)
 
  Under the manage we can see all the metrics that the prometheus is scrapping already through `Node Exporter`. We only one node which is minikube being manage currently, we can find it under Dashbord
 
  We can see the IP address of the minikube on the dashboard
 
+  ![alt text](images/1.17.png)
+
+ ![alt text](images/1.18.png)
+
+ ![alt text](images/1.19.png)
+
+ ![alt text](images/1.20.png)
+
  In addition to grafana, Prometheus also have its own UI, and we can access it also using port forward. From the prom.yaml files we downloaded earlier, we can see that prometheus is running on port `9090`
+
+![alt text](images/1.21.png)
 
 ```
 kubectl get pod
 ```
+![alt text](images/1.22.png)
 
 ```
 kubectl port-forward prometheus-prometheus-kube-prometheus-prometheus-0 9090
 ```
+![alt text](images/1.23.png)
+
+![alt text](images/1.24.png)
+
+![alt text](images/1.25.png)
+
+![alt text](images/1.26.png)
 
 ### Monitor mongoDB with prometheus 
 
@@ -280,6 +323,7 @@ We are going to deploy MongoDB App on the kubernetes cluster, and expose the dat
 ```
 kubectl get servicemonitor
 ```
+![alt text](images/1.27.png)
 
 These are the services that generated all the targets on the prometheus UI 
 
@@ -287,6 +331,7 @@ Let take one of the servicemonitor and check what it contain
 ```
 kubectl get servicemonitor prometheus-kube-prometheus-alertmanager  -oyaml
 ```
+![alt text](images/1.28.png)
 
 You don't have to understand all that is written in the service monitor but there are some important label you must understand.
 
@@ -300,12 +345,16 @@ To check the configuration we have to check the crd
 ```
 kubectl get crd
 ```
+![alt text](images/1.29.png)
+
 These are the crds that prometheus has created, they are basically custom component for prometheus. Let's check one of them
 ```
 kubectl get  prometheuses.monitoring.coreos.com  -oyaml
 ```
 
-If we scroll down to the serviceMonitorSelector section, it basically says match all the service monitor that has **label** `release:prometheus`. Which means if you created a serviceMonitorComponent which doesn't have this label it will not be dicovered by prometheus.
+If we scroll down to the matchLabels under serviceMonitorSelector section, it basically says match all the service monitor that has **label** `release:prometheus`. Which means if you created a serviceMonitorComponent which doesn't have this label it will not be dicovered by prometheus.
+
+![alt text](images/1.30.png)
 
 so let's deploy MongoDB and configure it so that it becomes one of the target for prometheus to collect its metrics.
 
@@ -317,6 +366,8 @@ kubectl apply -f mongodb.yaml
 ```
 kubectl get pod
 ```
+![alt text](images/1.31.png)
+
 
 Now we have mongodb pod running and we monitor it with prometheus, the way to do that is by using a component called **Exporter**
 
@@ -329,6 +380,15 @@ There are 3 components we need to have when deploying an exporter
 
 We can do this by writing a yaml file for the component configuration files, but the better way to do it is to get a helm chart that has everything in it and install it with one command. So, let's check for the helm chart. The search will take us to github repo of the [**Community**](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-mongodb-exporter) maintaining the helm chart.
 
+![alt text](images/1.32.png)
+
+![alt text](images/1.33.png)
+
+![alt text](images/1.34.png)
+
+![alt text](images/1.35.png)
+
+![alt text](images/1.36.png)
 
 **helm show values  prometheus-community/kube-prometheus-stack > values.yaml**
 
@@ -338,23 +398,34 @@ add the repo
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 ```
+![alt text](images/1.37.png)
 
 we need to check which of the default configuration values we can override before installing the chart.
 ```
 helm show values  prometheus-community/prometheus-mongodb-exporter > values.yaml
 ```
+![alt text](images/1.37.png)
 
 from the values.yaml we downloaded, we need to override the mongodb uri and additionallabels under the serviceMonitor. We need to add the release label to it to enable prometheus to scrap its metrics.
 
 let's check for the service and see if the `mongodb service uri` configured in the value.yaml file we downloaded is correct with our service's port. 
 
+![alt text](images/1.38.png)
+
+![alt text](images/1.39.png)
+
+
 We are going to delete all the other elements in the values file we don't need to override leaving the serviceMonitor. Save the file.
+
+![alt text](images/1.41.png)
 
 Install the mongodb-exporter chart and pass the parameters with the configure values.yaml
 
 ```
 helm install mongodb-exporter prometheus-community/prometheus-mongodb-exporter -f values.yaml
 ```
+![alt text](images/1.42.png)
+
 let's check what we have installed with helm  now
 
 ```
@@ -368,6 +439,13 @@ check the Service
 ```
 kubectl get svc
 ```
+![alt text](images/1.43.png)
+
+![alt text](images/1.44.png)
+
+![alt text](images/1.45.png)
+
+
 check serviceMonitor
 ```
 kubectl get servicemonitor
@@ -376,14 +454,20 @@ kubectl get servicemonitor
 > [!NOTE]
 > the mongodb-exporter service monitor was not created. After troubleshooting, I notice i include **enabled: true** in the override configuration in the value.yaml file. The service was created after it was included.
 
+![alt text](images/1.46.png)
+
+![alt text](images/1.47.png)
+
+![alt text](images/1.48.png)
 
 Forwards the mongodb-exporter to the service port
 
-image 
+![alt text](images/1.49.png)
 
 ```
 kubectl port-forward service/mongodb-exporter-prometheus-mongodb-exporter 9216
 ```
+![alt text](images/1.50.png)
 
 let check the port in our web browser to see what data it's collecting
 ```
@@ -391,39 +475,47 @@ http://127.0.0.1:9216/
 ```
 click on the metrics to check the data
 
-image
+![alt text](images/1.51.png)
 
 we can see it is collecting metrics from mongodb
 
-image
+![alt text](images/1.52.png)
 
 let check our prometheus, it must have discovered the mongodb-exporter through the serviceMonitor and scrap the mongodb metrics
 ```
 127.0.0.1:9090 -> 9090
 ```
+![alt text](images/1.53.png)
+
+![alt text](images/1.54.png)
+
+![alt text](images/1.54.png)
 
 Lets check grafana to see if is displaying the metrics from mongodb
 ```
 kubectl get deployment
 ```
+![alt text](images/1.55.png)
+
 forward the deployment to port 30
 
 kubectl port-forward deployment/prometheus-grafana 3000
 
-**Login with: username = admin, password = prom-operator**
+![alt text](images/1.56.png)
+
+**Login with: username = admin**
+**To get password, use the following command**
+```
+kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
 
 click on Dashboard > pod
 
+![alt text](images/1.57.png)
 
-helm show values prometheus-community/kube-prometheus-stack > newvalues.yaml
+![alt text](images/1.59.png)
 
-http://localhost:9090
-
-
+![alt text](images/1.60.png)
 
 
-kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
-kubectl --namespace default port-forward $POD_NAME 3000
-
-W6OYuQ4o3Y7o1ZZZ2ljjqFzRmZWWFpy709W53lEb
