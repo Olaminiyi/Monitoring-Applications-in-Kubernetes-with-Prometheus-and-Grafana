@@ -1,4 +1,4 @@
-# Monitoring Applications in Kubernetes with Prometheus and Grafana
+# Monitoring Applications in Kubernetes with Prometheus and Grafana.
 
 In this project we will be setting up a Prometheus monitoring for a third party app in Kubernetes cluster. Before we start the implementation, we are going to explain some terms below.
 
@@ -21,7 +21,8 @@ Prometheus consist of 3 main components
 - Data Retrieval Worker: This the components of the prometheus that pull and retrieve metrics from services and applications and forwards to Tthe Time Series Database
 -  Prometheus Server: it has a web server or server API that accepts queries using PromQL queries for the stored data inthe in the database. the server api displays the metrics through Prometheus Web UI dashboard or any other data visualization applications such as Grafana.
  
- Below is the full Prometheus Architecture 
+ Below is the full Prometheus Architecture.
+ 
 
 ![alt text](images/1.1.png)
 
@@ -33,7 +34,7 @@ How does Prometheus collect those metrics from target?
 
 Prometheus collects metrics from target systems by scraping HTTP endpoints that expose these metrics in a specific format. Some of the methods are explain below:
 
-1. **Target Configuration:** This can be achieve in 2 ways for different environments.
+1. **Target Configuration:** This can be achieve in 2 ways for different environments
 - **Static Configuration:** You can configure Prometheus with a list of targets in its configuration file. This is useful for small or static environments where the list of targets doesn't change frequently.
 ```
 scrape_configs:
@@ -114,7 +115,7 @@ There are several ways to deploy prometheus in kubernetes cluster: some are list
  - Helm will initiate the setup 
  - Operator will manage the setup
 
-We will use Minikube to set up our cluster and Kubectl to interract with our cluster
+We will use Minikube to set up our cluster and Kubectl to interract with our cluster.
 
 Minikube is a tool that sets up a Kubernetes environment on a local PC or laptop. It’s technically a Kubernetes distribution, but because it addresses a different type of use case than most other distributions (like Rancher, OpenShift, and EKS), it’s more common to hear folks refer to it as a tool rather than a distribution. Read more about [Minikube here](https://sysdig.com/learn-cloud-native/what-is-minikube/).
 
