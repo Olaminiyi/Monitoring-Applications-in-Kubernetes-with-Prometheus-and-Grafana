@@ -404,11 +404,10 @@ we need to check which of the default configuration values we can override befor
 ```
 helm show values  prometheus-community/prometheus-mongodb-exporter > values.yaml
 ```
-![alt text](images/1.37.png)
 
 from the values.yaml we downloaded, we need to override the mongodb uri and additionallabels under the serviceMonitor. We need to add the release label to it to enable prometheus to scrap its metrics.
 
-let's check for the service and see if the `mongodb service uri` configured in the value.yaml file we downloaded is correct with our service's port. 
+let's check for the service and see if the `mongodb service uri` configured in the value.yaml file we downloaded is correct with our service's port. You can open the downloaded file in Visual studio code editor.
 
 ![alt text](images/1.38.png)
 
@@ -489,7 +488,6 @@ let check our prometheus, it must have discovered the mongodb-exporter through t
 
 ![alt text](images/1.54.png)
 
-![alt text](images/1.54.png)
 
 Lets check grafana to see if is displaying the metrics from mongodb
 ```
@@ -512,6 +510,8 @@ kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-passwor
 click on Dashboard > pod
 
 ![alt text](images/1.57.png)
+
+![alt text](images/1.58.png)
 
 ![alt text](images/1.59.png)
 
