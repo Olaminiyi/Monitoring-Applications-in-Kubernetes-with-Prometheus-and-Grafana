@@ -390,9 +390,6 @@ We can do this by writing a yaml file for the component configuration files, but
 
 ![alt text](images/1.36.png)
 
-**helm show values  prometheus-community/kube-prometheus-stack > values.yaml**
-
-
 add the repo 
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
