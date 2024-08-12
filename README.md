@@ -21,7 +21,7 @@ Prometheus consist of 3 main components
 - Data Retrieval Worker: This the components of the prometheus that pull and retrieve metrics from services and applications and forwards to Tthe Time Series Database
 -  Prometheus Server: it has a web server or server API that accepts queries using PromQL queries for the stored data inthe in the database. the server api displays the metrics through Prometheus Web UI dashboard or any other data visualization applications such as Grafana.
  
- Below is the full Prometheus Architecture.
+ Below is the full Prometheus Architecture
  
 
 ![alt text](images/1.1.png)
