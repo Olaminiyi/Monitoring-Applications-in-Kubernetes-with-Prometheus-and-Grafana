@@ -12,7 +12,7 @@ Imagine having such a complex infrastucture with loads of servers distributed ov
 
 What makes the process of debugging easier is to have a tool that  constantly monitor if services are running and alert the maintainer as soon as one service crashes so you know exactly what happened or even better it identify problems before they even occur and alerts the system administrators responsible for that infrasture to prevent that issue. 
 
-How does prometheus work?.
+How does prometheus work?
 
 ![alt text](images/1.2.png)
 
