@@ -1,4 +1,4 @@
-# Monitoring Applications in Kubernetes with Prometheus and Grafana
+# Monitoring Applications in Kubernetes with Prometheus and Grafana.
 
 In this project we will be setting up a Prometheus monitoring for a third party app in Kubernetes cluster. Before we start the implementation, we are going to explain some terms below.
 
