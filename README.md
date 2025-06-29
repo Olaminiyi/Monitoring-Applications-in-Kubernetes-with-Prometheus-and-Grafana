@@ -6,7 +6,7 @@ In this project I will be setting up a Prometheus monitoring for a third party a
 
 why is Prometheus important?
 
-Modern DevOps becomes more and more complex to handle manually and therefore needs automation. Typically you have multiple servers that run containerized applications and there are hundreds of different processes running on that infrastructure and things are interconnected. Maintaining such setup to run smoothly without application downtimes is very challenging
+Modern DevOps becomes more and more complex to handle manually and therefore needs automation. Typically you have multiple servers that run containerized applications and there are hundreds of different processes running on that infrastructure and things are interconnected. Maintaining such setup to run smoothly without application downtimes is very challenging.
 
 Imagine having such a complex infrastucture with loads of servers distributed over many locations and you have no insight of what is happening on the hardware level or on application level like errors, responses latency, hardware down or overloaded or maybe running out of resources etc. If something happens application may becomes unavailable to user and you must be able to identify out of the hundred of of things in the cluster went wrong and that could be difficult and time-consuming when debugging the system manaually.
 
