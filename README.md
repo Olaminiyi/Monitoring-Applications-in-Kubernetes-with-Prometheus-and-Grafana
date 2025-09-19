@@ -10,7 +10,7 @@ Modern DevOps becomes more and more complex to handle manually and therefore nee
 
 Imagine having such a complex infrastucture with loads of servers distributed over many locations and you have no insight of what is happening on the hardware level or on application level like errors, responses latency, hardware down or overloaded or maybe running out of resources etc. If something happens application may becomes unavailable to user and you must be able to identify out of the hundred of of things in the cluster went wrong and that could be difficult and time-consuming when debugging the system manaually.
 
-What makes the process of debugging easier is to have a tool that  constantly monitor if services are running and alert the maintainer as soon as one service crashes so you know exactly what happened or even better it identify problems before they even occur and alerts the system administrators responsible for that infrasture to prevent that issue. 
+What makes the process of debugging easier is to have a tool that  constantly monitor if services are running and alert the maintainer as soon as one service crashes so you know exactly what happened or even better it identify problems before they even occur and alerts the system administrators responsible for that infrasture to prevent that issue 
 
 How does prometheus work?
 
