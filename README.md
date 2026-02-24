@@ -2,7 +2,7 @@
 
 In this project I will be setting up a Prometheus monitoring for a third party app in Kubernetes cluster. Before we start the implementation, we are going to explain some terms below.
 
-[**Prometheus**](https://www.tigera.io/learn/guides/prometheus-monitoring/): rometheus is an open-source technology designed to provide monitoring and alerting functionality for cloud-native environments, including Kubernetes. It can collect and store metrics as time-series data, recording information with a timestamp. It can also collect and record labels, which are optional key-value pairs
+[**Prometheus**](https://www.tigera.io/learn/guides/prometheus-monitoring/): rometheus is an open-source technology designed to provide monitoring and alerting functionality for cloud-native environments, including Kubernetes. It can collect and store metrics as time-series data, recording information with a timestamp. It can also collect and record labels, which are optional key-value pairs.
 
 why is Prometheus important?
 
